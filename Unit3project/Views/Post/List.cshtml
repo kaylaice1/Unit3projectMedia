@@ -1,0 +1,9 @@
+﻿@model IEnumerable<Post>
+<h2>All Posts</h2>
+@foreach (var post in Model)
+{
+    <h3>@post.Title</h3>
+    <p>@post.Content</p>
+    <small>by @post.Author.Username on @post.PostDate</small>
+    <a asp-action="View" asp-route-itemid="@post.Id">View Post</a>
+}

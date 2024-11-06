@@ -1,0 +1,7 @@
+﻿@model User
+<form asp-action="Register" method="post">
+    <input asp-for="Username" placeholder="Username" required />
+    <input asp-for="Email" placeholder="Email" required />
+    <input asp-for="PasswordHash" placeholder="Password" type="password" required />
+    <button type="submit">Register</button>
+</form>

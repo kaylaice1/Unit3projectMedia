@@ -1,16 +1,17 @@
 ﻿@model User
+
 <h2>@Model.Username's Profile</h2>
 <p>Email: @Model.Email</p>
 <p>Member since: @Model.DateCreated.ToShortDateString()</p>
 
 <h3>Posts by @Model.Username</h3>
-@if (Model.Posts.Any())
+@if (ViewBag.Posts != null && ((List<Post>)ViewBag.Posts).Any())
 {
     <ul>
-        @foreach (var post in Model.Posts)
+        @foreach (var post in (List<Post>)ViewBag.Posts)
         {
             <li>
-                <a href="/Post/View/@post.Title">@post.Title</a>
+                <a href="/Post/View/@post.Id">@post.Title</a>
                 <small>@post.PostDate.ToShortDateString()</small>
             </li>
         }

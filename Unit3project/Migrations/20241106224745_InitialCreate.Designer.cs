@@ -12,7 +12,7 @@ using Unit3project.Data;
 namespace Unit3project.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241105232054_InitialCreate")]
+    [Migration("20241106224745_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,7 +37,6 @@ namespace Unit3project.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PostId")
@@ -48,11 +47,19 @@ namespace Unit3project.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PostId");
-
                     b.HasIndex("UserId");
 
                     b.ToTable("Comments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CommentDate = new DateTime(2024, 11, 6, 16, 47, 45, 77, DateTimeKind.Local).AddTicks(6419),
+                            Content = "First comment!",
+                            PostId = 1,
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Unit3project.Models.Post", b =>
@@ -64,14 +71,12 @@ namespace Unit3project.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PostDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -82,59 +87,57 @@ namespace Unit3project.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "This is the first post",
+                            PostDate = new DateTime(2024, 11, 6, 16, 47, 45, 77, DateTimeKind.Local).AddTicks(6385),
+                            Title = "Welcome Post",
+                            UserId = 1
+                        });
                 });
 
             modelBuilder.Entity("Unit3project.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            DateCreated = new DateTime(2024, 11, 6, 16, 47, 45, 77, DateTimeKind.Local).AddTicks(6193),
+                            Email = "admin@example.com",
+                            PasswordHash = "hashedpassword",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("Unit3project.Models.Comment", b =>
                 {
-                    b.HasOne("Unit3project.Models.Post", "ParentPost")
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Unit3project.Models.User", "Author")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("ParentPost");
-                });
-
-            modelBuilder.Entity("Unit3project.Models.Post", b =>
-                {
-                    b.HasOne("Unit3project.Models.User", "Author")
-                        .WithMany("Posts")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -144,14 +147,13 @@ namespace Unit3project.Migrations
 
             modelBuilder.Entity("Unit3project.Models.Post", b =>
                 {
-                    b.Navigation("Comments");
-                });
+                    b.HasOne("Unit3project.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("Unit3project.Models.User", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Posts");
+                    b.Navigation("Author");
                 });
 #pragma warning restore 612, 618
         }

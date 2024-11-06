@@ -7,9 +7,8 @@ namespace Unit3project.Models
         public int Id { get; set; }
         public string? Content { get; set; }
         public DateTime CommentDate { get; set; }
-        public int UserId { get; set; }
+        public int UserId { get; set; } 
         public User? Author { get; set; }
-        public int PostId { get; set; }
-        public Post? ParentPost { get; set; }
+        public int PostId { get; set; } 
     }
 }

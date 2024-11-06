@@ -3,31 +3,25 @@ using Unit3project.Models;
 
 namespace Unit3project.Data
 {
-    public class ApplicationDbContext :DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Posts)
-                .WithOne(p => p.Author)
-                .HasForeignKey(p => p.UserId);
+            modelBuilder.Entity<User>().HasData(
+                new User { UserId = 1, Username = "admin", Email = "admin@example.com", PasswordHash = "hashedpassword", DateCreated = DateTime.Now }
+            );
 
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Comments)
-                .WithOne(c => c.Author)
-                .HasForeignKey(c => c.UserId);
+            modelBuilder.Entity<Post>().HasData(
+                new Post { Id = 1, Title = "Welcome Post", Content = "This is the first post", PostDate = DateTime.Now, UserId = 1 }
+            );
 
-            modelBuilder.Entity<Post>()
-                .HasMany(p => p.Comments)
-                .WithOne(c => c.ParentPost)
-                .HasForeignKey(c => c.PostId);
-
+            modelBuilder.Entity<Comment>().HasData(
+                new Comment { Id = 1, Content = "First comment!", CommentDate = DateTime.Now, UserId = 1, PostId = 1 }
+            );
         }
     }
 }

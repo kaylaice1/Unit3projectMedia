@@ -2,17 +2,17 @@
 
 <h2>@Model.Title</h2>
 <p>@Model.Content</p>
-<small>Posted by @Model.Author.Username on @Model.PostDate.ToShortDateString()</small>
+<small>Posted by @Model.Author?.Username on @Model.PostDate.ToShortDateString()</small>
 
 <h3>Comments</h3>
-@if (Model.Comments.Any())
+@if (ViewBag.Comments != null && ((List<Comment>)ViewBag.Comments).Any())
 {
     <ul>
-        @foreach (var comment in Model.Comments)
+        @foreach (var comment in (List<Comment>)ViewBag.Comments)
         {
             <li>
                 <p>@comment.Content</p>
-                <small>by @comment.Author.Username on @comment.CommentDate.ToShortDateString()</small>
+                <small>by @comment.Author?.Username on @comment.CommentDate.ToShortDateString()</small>
             </li>
         }
     </ul>
@@ -37,5 +37,5 @@ else
 }
 else
 {
-    <p><a href=="/Account/Login">Log in</a> to leave a comment.</p>
+    <p><a href="/Account/Login">Log in</a> to leave a comment.</p>
 }

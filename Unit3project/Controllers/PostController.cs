@@ -1,40 +1,56 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Unit3project.Data;
 using Unit3project.Models;
+using System;
+using System.Linq;
 
 namespace Unit3project.Controllers
 {
-    public class PostController : Controller
+    public class PostController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context = context;
 
-        public PostController(ApplicationDbContext context)
+        public IActionResult List()
         {
-            _context = context;
+            var posts = _context.Posts.ToList();
+            return View(posts);
         }
-
-        public IActionResult List() =>View(_context.Posts.Include(p => p.Author).ToList());
 
         public IActionResult Create() => View();
 
         [HttpPost]
         public IActionResult Create(Post post)
         {
-            if (ModelState.IsValid)
+            if (User?.Identity?.IsAuthenticated == true)
             {
-                post.PostDate = DateTime.Now;
-                _context.Posts.Add(post);
-                _context.SaveChanges();
-                return RedirectToAction("List");
+                var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+                if (int.TryParse(userIdString, out int userId))
+                {
+                    post.UserId = userId;
+                    post.PostDate = DateTime.Now;
+                    _context.Posts.Add(post);
+                    _context.SaveChanges();
+                    return RedirectToAction("List");
+                }
             }
-            return View();
+
+            ModelState.AddModelError("", "You must be logged in to create a post.");
+            return View(post);
         }
 
         public IActionResult View(int id)
         {
-            var post = _context.Posts.Include(p => p.Comments).ThenInclude(c => c.Author)
-                .FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+
+            if (post != null)
+            {
+                var comments = _context.Comments
+                    .Where(c => c.PostId == id)
+                    .ToList();
+                ViewBag.Comments = comments;
+            }
+
             return View(post);
         }
 
@@ -60,7 +76,7 @@ namespace Unit3project.Controllers
                 }
             }
 
-            return RedirectToAction("View", new { id= postId });
+            return RedirectToAction("View", new { id = postId });
         }
     }
 }

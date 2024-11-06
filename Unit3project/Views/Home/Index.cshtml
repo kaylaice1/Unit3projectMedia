@@ -1,8 +1,41 @@
 ﻿@model IEnumerable<Post>
-<h2>Recent Posts</h2>
-@foreach (var post in Model)
-{
-    <h3>@post.Title</h3>
-    <p>@post.Content</p>
-    <small>by @post.Author.Username on @post.PostDate</small>
-}
+<div class="row">
+    <div class="col-lg-8">
+        <h2>Recent Posts</h2>
+
+        @foreach (var post in Model)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3>@post.Title</h3>
+                    <p>@post.Content</p>
+                    <div class="text-muted">
+                        Posted on @post.PostDate.ToShortDateString()
+                    </div>
+                    <a asp-controller="Post" asp-action="View" asp-route-id="@post.Id" class="btn btn-primary mt-2">
+                        Read More
+                    </a>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <p>No posts available.</p>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h5>Quick Actions</h5>
+                    <a asp-controller="Post" asp-action="Create" class="btn btn-success">
+                        Create New Post
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

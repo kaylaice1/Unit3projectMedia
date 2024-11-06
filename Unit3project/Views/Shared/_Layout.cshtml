@@ -18,14 +18,14 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("RecentPosts", "Home")">Recent Posts</a>
+                            <a class="nav-link" href="@Url.Action("_RecentPosts", "Home")">Recent Posts</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("List", "Post")">All Posts</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User?.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Profile", "Account")">Profile</a>

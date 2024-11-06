@@ -1,7 +1,33 @@
 ﻿@model User
-<form asp-action="Register" method="post">
-    <input asp-for="Username" placeholder="Username" required />
-    <input asp-for="Email" placeholder="Email" required />
-    <input asp-for="PasswordHash" placeholder="Password" type="password" required />
-    <button type="submit">Register</button>
-</form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Create Account</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Register" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Username" class="form-label">Username</label>
+                            <input asp-for="Username" class="form-control" placeholder="Choose a username" required />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter your email" required />
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PasswordHash" class="form-label">Password</label>
+                            <input asp-for="PasswordHash" class="form-control" type="password" placeholder="Create a password" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Register</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <span>Already have an account? </span>
+                        <a asp-action="Login" class="text-primary">Login here</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

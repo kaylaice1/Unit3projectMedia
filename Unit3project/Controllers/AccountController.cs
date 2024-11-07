@@ -65,8 +65,10 @@ namespace Unit3project.Controllers
                 var user = new User
                 {
                     Username = model.Username,
-                    PasswordHash = HashPassword(password: model.Password)
+                    PasswordHash = HashPassword(model.PasswordHash ?? string.Empty)
                 };
+
+                Console.WriteLine("Hashed Password: " + user.PasswordHash);
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
@@ -77,27 +79,25 @@ namespace Unit3project.Controllers
             return View(model);
         }
 
+
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
-        // Static method to hash a password
         private static string HashPassword(string password)
         {
-            ArgumentNullException.ThrowIfNull(password); // Simplified exception throwing
+            ArgumentNullException.ThrowIfNull(password); 
 
-            var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password)); // Use HashData for efficiency
+            var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password)); 
             return Convert.ToBase64String(hashedBytes);
         }
 
-        // Static method to verify the entered password against the stored hash
         private static bool VerifyPassword(string enteredPassword, string storedHash)
         {
-            ArgumentNullException.ThrowIfNull(storedHash); // Simplified exception throwing
-
-            var enteredHash = HashPassword(enteredPassword);
+            if (string.IsNullOrEmpty(storedHash)) return false;
+            var enteredHash = HashPassword(enteredPassword ?? "");
             return enteredHash == storedHash;
         }
     }

@@ -5,9 +5,14 @@ using System.Linq;
 
 namespace Unit3project.Controllers
 {
-    public class HomeController(ApplicationDbContext context) : Controller
+    public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+        public HomeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Index()
         {
@@ -16,7 +21,7 @@ namespace Unit3project.Controllers
                 .Take(5)
                 .ToList();
 
-            return View(recentPosts); 
+            return View(recentPosts);
         }
 
         public IActionResult RecentPosts()
@@ -26,7 +31,7 @@ namespace Unit3project.Controllers
                 .Take(5)
                 .ToList();
 
-            return PartialView("Home/_RecentPosts", recentPosts); 
+            return PartialView("Home/_RecentPosts", recentPosts);
         }
     }
 }

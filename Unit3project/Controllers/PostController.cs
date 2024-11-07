@@ -6,9 +6,14 @@ using System.Linq;
 
 namespace Unit3project.Controllers
 {
-    public class PostController(ApplicationDbContext context) : Controller
+    public class PostController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+        public PostController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult List()
         {

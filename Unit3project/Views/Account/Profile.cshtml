@@ -1,23 +1,58 @@
 ﻿@model User
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">Profile Information</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h5 class="text-muted">Username</h5>
+                        <p class="lead">@Model.Username</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5 class="text-muted">Email</h5>
+                        <p class="lead">@Model.Email</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5 class="text-muted">Member Since</h5>
+                        <p class="lead">@Model.DateCreated.ToShortDateString()</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<h2>@Model.Username's Profile</h2>
-<p>Email: @Model.Email</p>
-<p>Member since: @Model.DateCreated.ToShortDateString()</p>
-
-<h3>Posts by @Model.Username</h3>
-@if (ViewBag.Posts != null && ((List<Post>)ViewBag.Posts).Any())
-{
-    <ul>
-        @foreach (var post in (List<Post>)ViewBag.Posts)
-        {
-            <li>
-                <a href="/Post/View/@post.Id">@post.Title</a>
-                <small>@post.PostDate.ToShortDateString()</small>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p>No posts yet.</p>
-}
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="h4 mb-0">My Posts</h2>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Posts != null && ((List<Post>)ViewBag.Posts).Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var post in (List<Post>)ViewBag.Posts)
+                            {
+                                <a href="/Post/View/@post.Id" class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-1">@post.Title</h5>
+                                        <small class="text-muted">@post.PostDate.ToShortDateString()</small>
+                                    </div>
+                                    <p class="mb-1">@(post.Content?.Length > 100 ? post.Content.Substring(0, 100) + "..." : post.Content)</p>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <p class="text-muted">No posts yet.</p>
+                            <a asp-controller="Post" asp-action="Create" class="btn btn-primary">Create Your First Post</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

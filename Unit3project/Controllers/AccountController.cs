@@ -9,9 +9,14 @@ using System.Text;
 
 namespace Unit3project.Controllers
 {
-    public class AccountController(ApplicationDbContext context) : Controller
+    public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context = context;
+        private readonly ApplicationDbContext _context;
+
+        public AccountController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Login() => View();
 
@@ -79,18 +84,48 @@ namespace Unit3project.Controllers
             return View(model);
         }
 
-
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
+        public IActionResult Profile()
+        {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!int.TryParse(userIdString, out int userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = _context.Users
+                .FirstOrDefault(u => u.UserId == userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var posts = _context.Posts
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.PostDate)
+                .ToList();
+
+            ViewBag.Posts = posts;
+
+            return View(user);
+        }
+
         private static string HashPassword(string password)
         {
-            ArgumentNullException.ThrowIfNull(password); 
+            ArgumentNullException.ThrowIfNull(password);
 
-            var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password)); 
+            var hashedBytes = SHA256.HashData(Encoding.UTF8.GetBytes(password));
             return Convert.ToBase64String(hashedBytes);
         }
 

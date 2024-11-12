@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Post>
+
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 mb-0">All Posts</h2>
@@ -18,7 +19,7 @@
                 <h3 class="h4 card-title">@post.Title</h3>
                 <p class="card-text text-muted">
                     <small>
-                        <i class="bi bi-calendar"></i> Posted on @post.PostDate.ToString("MM dd, yyyy")
+                        <i class="bi bi-calendar"></i> Posted by @post.Author?.Username on @post.PostDate.ToString("MM dd, yyyy")
                     </small>
                 </p>
                 <p class="card-text">

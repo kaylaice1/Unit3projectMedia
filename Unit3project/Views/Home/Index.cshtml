@@ -10,7 +10,7 @@
                     <h3>@post.Title</h3>
                     <p>@post.Content</p>
                     <div class="text-muted">
-                        Posted on @post.PostDate.ToShortDateString()
+                        Posted by @post.Author?.Username on @post.PostDate.ToString("MM dd, yyyy")
                     </div>
                     <a asp-controller="Post" asp-action="View" asp-route-id="@post.Id" class="btn btn-primary mt-2">
                         Read More

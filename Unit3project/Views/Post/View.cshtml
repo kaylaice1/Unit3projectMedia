@@ -1,6 +1,6 @@
 ﻿@model Post
 
-<h2>@Model.Title</h2>
+<h1>@Model.Title</h1>
 <p>@Model.Content</p>
 <small>Posted by @Model.Author?.Username on @Model.PostDate.ToShortDateString()</small>
 
@@ -12,7 +12,7 @@
         {
             <li>
                 <p>@comment.Content</p>
-                <small>by @comment.Author?.Username on @comment.CommentDate.ToShortDateString()</small>
+                <small>Posted by @comment.Author?.Username on @comment.CommentDate.ToShortDateString()</small>
             </li>
         }
     </ul>
@@ -27,7 +27,6 @@ else
     <h4>Add a Comment</h4>
     <form asp-action="AddComment" method="post">
         <input type="hidden" name="postId" value="@Model.Id" />
-
         <div class="form-group">
             <label for="Content">Comment</label>
             <textarea id="Content" name="Content" class="form-control" rows="3" required placeholder="Write your comment here..."></textarea>

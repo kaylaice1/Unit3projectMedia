@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Unit3project.Data;
 using Unit3project.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Unit3project.Controllers
 {
@@ -16,22 +17,12 @@ namespace Unit3project.Controllers
 
         public IActionResult Index()
         {
-            var recentPosts = _context.Posts
+            var posts = _context.Posts
+                .Include(p => p.Author)
                 .OrderByDescending(p => p.PostDate)
-                .Take(5)
                 .ToList();
 
-            return View(recentPosts);
-        }
-
-        public IActionResult RecentPosts()
-        {
-            var recentPosts = _context.Posts
-                .OrderByDescending(p => p.PostDate)
-                .Take(5)
-                .ToList();
-
-            return PartialView("Home/_RecentPosts", recentPosts);
+            return View(posts);
         }
     }
 }

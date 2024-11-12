@@ -19,7 +19,6 @@ namespace Unit3project.Controllers
         }
 
         public IActionResult Login() => View();
-
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
@@ -33,10 +32,10 @@ namespace Unit3project.Controllers
             if (user != null && !string.IsNullOrEmpty(user.PasswordHash) && VerifyPassword(password, user.PasswordHash))
             {
                 var claims = new List<Claim>
-                {
-                    new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                    new(ClaimTypes.Name, user.Username ?? string.Empty)
-                };
+        {
+            new(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new(ClaimTypes.Name, user.Username ?? string.Empty)
+        };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
@@ -70,10 +69,10 @@ namespace Unit3project.Controllers
                 var user = new User
                 {
                     Username = model.Username,
-                    PasswordHash = HashPassword(model.PasswordHash ?? string.Empty)
+                    Email = model.Email,
+                    PasswordHash = HashPassword(model.PasswordHash ?? string.Empty),
+                    DateCreated = DateTime.Now
                 };
-
-                Console.WriteLine("Hashed Password: " + user.PasswordHash);
 
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();

@@ -3,6 +3,7 @@ using Unit3project.Data;
 using Unit3project.Models;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Unit3project.Controllers
 {
@@ -17,7 +18,10 @@ namespace Unit3project.Controllers
 
         public IActionResult List()
         {
-            var posts = _context.Posts.ToList();
+            var posts = _context.Posts
+                .Include(p => p.Author)
+                .OrderByDescending(p => p.PostDate)
+                .ToList();
             return View(posts);
         }
 
@@ -46,12 +50,15 @@ namespace Unit3project.Controllers
 
         public IActionResult View(int id)
         {
-            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            var post = _context.Posts
+                .Include(p => p.Author)
+                .FirstOrDefault(p => p.Id == id);
 
             if (post != null)
             {
                 var comments = _context.Comments
                     .Where(c => c.PostId == id)
+                    .Include(c => c.Author)
                     .ToList();
                 ViewBag.Comments = comments;
             }

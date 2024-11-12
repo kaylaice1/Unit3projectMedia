@@ -16,10 +16,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.LogoutPath = "/Account/Logout"; 
+        options.LogoutPath = "/Account/Logout";
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
-        options.SlidingExpiration = true; 
+        options.SlidingExpiration = true;
     });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddSession(options =>
 {
